@@ -73,7 +73,7 @@ jobs:
 
       - name: Full test suite
         if: inputs.run-full-matrix || matrix.python-version == '3.10'
-        run: uv run pytest -v --tb=short --cov=superclaude --cov-report=xml
+        run: uv run --with pytest-cov pytest -v --tb=short --cov=superclaude --cov-report=xml
 
       - name: Upload coverage
         if: matrix.python-version == '3.10'
