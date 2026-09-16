@@ -104,7 +104,13 @@ jobs:
           SYNC_BRANCH="framework-sync/$(date +'%Y-%m-%d-%H%M')"
           git checkout -b "$SYNC_BRANCH"
 
-          git add commands/ agents/ .claude-plugin/plugin.json plugin.json
+          git add commands/ agents/
+          if [ -f ".claude-plugin/plugin.json" ]; then
+            git add .claude-plugin/plugin.json
+          fi
+          if [ -f "plugin.json" ]; then
+            git add plugin.json
+          fi
 
           if [ -f "docs/.framework-sync-commit" ]; then
             git add -f docs/.framework-sync-commit
