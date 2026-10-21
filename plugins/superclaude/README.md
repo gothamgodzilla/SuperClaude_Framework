@@ -62,4 +62,4 @@ Utilities: `agent`, `index-repo`, `git`, `task`, `workflow`, `spawn`, `load`, `s
 
 ## Version
 
-4.3.0
+4.3.1
