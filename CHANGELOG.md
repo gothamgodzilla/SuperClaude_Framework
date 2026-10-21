@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.3.1] - 2026-10-21
+### Changed
+- Patch version bump (4.3.0 → 4.3.1); no functional changes since 4.3.0 on `master`
+
 ## [4.3.0] - 2026-03-22
 ### Added
 - **Agent installation** - `superclaude install` now deploys 20 agent files to `~/.claude/agents/` (#531)

@@ -6,8 +6,9 @@ Quick fixes to advanced diagnostics for SuperClaude Framework issues.
 
 **Installation Verification:**
 ```bash
-python3 -m SuperClaude --version    # Should show 4.1.5
-SuperClaude install --list-components
+superclaude --version                # Should show 4.3.1
+superclaude doctor                   # Health check: pytest plugin, skills, config
+superclaude install --list           # Lists /sc: commands and whether each is installed
 ```
 
 **Command Issues:**
@@ -19,9 +20,10 @@ SuperClaude install --list-components
 ```
 
 **Resolution Checklist:**
-- [ ] Version commands work and show 4.1.5
-- [ ] `/sc:` commands respond in Claude Code  
-- [ ] MCP servers listed: `SuperClaude install --list-components | grep mcp`
+- [ ] `superclaude --version` shows 4.3.1
+- [ ] `superclaude doctor` reports no failures
+- [ ] `/sc:` commands respond in Claude Code
+- [ ] MCP servers listed: `claude mcp list`
 
 ## Common Issues
 
@@ -30,45 +32,49 @@ SuperClaude install --list-components
 **Package Installation Fails:**
 ```bash
 # For pipx users
-pipx uninstall SuperClaude
-pipx install SuperClaude
+pipx uninstall superclaude
+pipx install superclaude
 
 # For pip users
-pip uninstall SuperClaude
+pip uninstall superclaude
 pip install --upgrade pip
-pip install SuperClaude
+pip install superclaude
 ```
 
 **Permission Denied / PEP 668 Error:**
 ```bash
 # Option 1: Use pipx (recommended)
-pipx install SuperClaude
+pipx install superclaude
 
 # Option 2: Use pip with --user flag
-pip install --user SuperClaude
+pip install --user superclaude
 
 # Option 3: Fix permissions
 sudo chown -R $USER ~/.claude
 
 # Option 4: Force installation (use with caution)
-pip install --break-system-packages SuperClaude
+pip install --break-system-packages superclaude
 ```
 
-**Component Missing:**
+**Commands Missing or Outdated:**
 ```bash
-python3 -m SuperClaude install --components core commands agents modes --force
+superclaude install --force          # Reinstall all /sc: commands
+superclaude update                   # Same as install --force
+superclaude install-skill confidence-check --force  # Reinstall a skill
 ```
 
 ### Command Issues
 
 **Commands Not Recognized:**
-1. Restart Claude Code completely
-2. Verify: `python3 -m SuperClaude --version`
-3. Test: `/sc:brainstorm "test"`
+1. Verify the files exist: `ls ~/.claude/commands/sc/`
+2. If empty or missing: `superclaude install --force`
+3. Restart Claude Code completely
+4. Test: `/sc:brainstorm "test"`
 
 **Agents Not Activating:**
 - Use specific keywords: `/sc:implement "secure JWT authentication"`
-- Manual activation: `@agent-security "review auth code"`
+- Manual activation: `@agent-security-engineer "review auth code"`
+- Verify agent files exist: `ls ~/.claude/agents/`
 
 **Slow Performance:**
 ```bash
@@ -80,9 +86,11 @@ python3 -m SuperClaude install --components core commands agents modes --force
 
 **Server Connection Fails:**
 ```bash
-ls ~/.claude/.claude.json            # Check config exists
-node --version                       # Verify Node.js 16+
-SuperClaude install --components mcp --force
+claude mcp list                      # Check what Claude Code has registered
+node --version                       # Most servers run via npx and need Node.js
+superclaude mcp --list               # Show servers SuperClaude can install
+superclaude mcp --servers context7   # Reinstall a specific server
+superclaude mcp --dry-run            # Preview without installing
 ```
 
 **API Key Required (Magic/Morphllm):**
@@ -96,21 +104,24 @@ export MORPH_API_KEY="your_key"
 
 **System Analysis:**
 ```bash
-SuperClaude install --diagnose
-cat ~/.claude/logs/superclaude.log | tail -50
+superclaude doctor --verbose         # Detailed diagnostics
+python3 -c "import superclaude; print(superclaude.__file__)"  # Which install is active
 ```
 
 **Component Analysis:**
 ```bash
-ls -la ~/.claude/                    # Check installed files
-grep -r "@" ~/.claude/CLAUDE.md      # Verify imports
+ls -la ~/.claude/commands/sc/        # Installed slash commands
+ls -la ~/.claude/agents/             # Installed agents
+ls -la ~/.claude/skills/             # Installed skills
 ```
 
 **Reset Installation:**
 ```bash
-SuperClaude backup --create          # Backup first
-SuperClaude uninstall
-SuperClaude install --fresh
+cp -r ~/.claude ~/.claude.backup     # Backup first
+rm -rf ~/.claude/commands/sc         # Remove installed commands
+pipx uninstall superclaude
+pipx install superclaude
+superclaude install
 ```
 
 ## Get Help
@@ -121,4 +132,4 @@ SuperClaude install --fresh
 
 **Community:**
 - [GitHub Issues](https://github.com/SuperClaude-Org/SuperClaude_Framework/issues)
-- Include: OS, Python version, error message, steps to reproduce
+- Include: OS, Python version, `superclaude doctor --verbose` output, error message, steps to reproduce
